@@ -80,8 +80,7 @@ model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 """
-model.compile(loss=keras.losses.categorical_crossentropy,
-              optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
+model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
 
 earlyStopping = callbacks.EarlyStopping(monitor="val_loss", mode="auto", patience=5, restore_best_weights=True)
 
