@@ -3,13 +3,14 @@ import numpy as np
 from keras import layers, callbacks
 from keras.datasets import mnist
 from keras.models import Sequential
+from keras.utils.np_utils import to_categorical
 from mnist import MNIST
 
 mn = MNIST('./mnist_data')
-x_train, y_train = mn.load_training()
-x_test, y_test = mn.load_testing()
+train_images, train_labels = mn.load_training()
+test_images, test_labels = mn.load_testing()
 
-x_train = np.asarray(x_train).astype(np.float32)
+"""x_train = np.asarray(x_train).astype(np.float32)
 y_train = np.asarray(y_train).astype(np.int32)
 x_test = np.asarray(x_test).astype(np.float32)
 y_test = np.asarray(y_test).astype(np.int32)
@@ -30,10 +31,28 @@ y_test = keras.utils.to_categorical(y_test, 10)
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train /= 255
-x_test /= 255
-print('x_train shape:', x_train.shape)
-print(x_train.shape[0], 'train samples')
-print(x_test.shape[0], 'Digit-Recognizer samples')
+x_test /= 255"""
+
+# Reshaping data-Adding number of channels as 1 (Grayscale images)
+train_images = train_images.reshape((train_images.shape[0],
+                                     train_images.shape[1],
+                                     train_images.shape[2], 1))
+
+test_images = test_images.reshape((test_images.shape[0],
+                                   test_images.shape[1],
+                                   test_images.shape[2], 1))
+
+# Scaling down pixel values
+train_images = train_images.astype('float32') / 255
+test_images = test_images.astype('float32') / 255
+
+# Encoding labels to a binary class matrix
+y_train = to_categorical(train_labels)
+y_test = to_categorical(test_labels)
+
+print('train_images shape:', train_images.shape)
+print(train_images.shape[0], 'train samples')
+print(test_images.shape[0], 'Digit-Recognizer samples')
 
 batch_size = 128
 num_classes = 10
@@ -61,15 +80,16 @@ model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 """
-model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
+model.compile(loss=keras.losses.categorical_crossentropy,
+              optimizer=keras.optimizers.Adadelta(), metrics=['accuracy'])
 
 earlyStopping = callbacks.EarlyStopping(monitor="val_loss", mode="auto", patience=5, restore_best_weights=True)
 
-hist = model.fit(x_train, y_train, batch_size=None, epochs=epochs, verbose=1,
-                 validation_data=(x_test, y_test), callbacks=[earlyStopping])
+hist = model.fit(train_images, y_train, batch_size=None, epochs=epochs, verbose=1,
+                 validation_data=(test_images, y_test), callbacks=[earlyStopping])
 print("The model has successfully trained")
 
-score = model.evaluate(x_test, y_test, verbose=0)
+score = model.evaluate(test_images, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 print("CNN Error: %.2f%%" % (100 - score[1]*100))
