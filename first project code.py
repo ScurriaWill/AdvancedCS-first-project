@@ -82,6 +82,11 @@ model.add(Dense(num_classes, activation='softmax'))
 """
 model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
 
+val_images = train_images[:10000]
+partial_images = train_images[10000:]
+val_labels = y_train[:10000]
+partial_labels = y_train[10000:]
+
 earlyStopping = callbacks.EarlyStopping(monitor="val_loss", mode="auto", patience=5, restore_best_weights=True)
 
 hist = model.fit(train_images, y_train, batch_size=None, epochs=epochs, verbose=1,
