@@ -89,8 +89,9 @@ partial_labels = y_train[10000:]
 
 earlyStopping = callbacks.EarlyStopping(monitor="val_loss", mode="auto", patience=5, restore_best_weights=True)
 
-hist = model.fit(train_images, y_train, batch_size=None, epochs=epochs, verbose=1,
-                 validation_data=(test_images, y_test), callbacks=[earlyStopping])
+hist = model.fit(partial_images, partial_labels, batch_size=None,
+                 epochs=25, validation_data=(val_images, val_labels),
+                 callbacks=[earlyStopping])
 print("The model has successfully trained")
 
 score = model.evaluate(test_images, y_test, verbose=0)
