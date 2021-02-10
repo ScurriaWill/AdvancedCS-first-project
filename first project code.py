@@ -4,11 +4,13 @@ from keras import layers, callbacks
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.utils.np_utils import to_categorical
-from mnist import MNIST
+# from mnist import MNIST
 
-mn = MNIST('./mnist_data')
+(train_images, train_labels), (test_images, test_labels) = mnist.load_data('mnist_data/mnist.npz')
+
+"""mn = MNIST('./mnist_data')
 train_images, train_labels = mn.load_training()
-test_images, test_labels = mn.load_testing()
+test_images, test_labels = mn.load_testing()"""
 
 train_images = np.asarray(train_images).astype(np.float32)
 train_labels = np.asarray(train_labels).astype(np.int32)
