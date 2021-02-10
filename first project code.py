@@ -4,9 +4,6 @@ from keras import layers, callbacks
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.utils.np_utils import to_categorical
-# from mnist import MNIST
-
-# requests.packages.urllib3.disable_warnings()
 import ssl
 
 try:
@@ -20,19 +17,10 @@ else:
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
-"""mn = MNIST('./mnist_data')
-train_images, train_labels = mn.load_training()
-test_images, test_labels = mn.load_testing()"""
-
 train_images = np.asarray(train_images).astype(np.float32)
 train_labels = np.asarray(train_labels).astype(np.int32)
 test_images = np.asarray(test_images).astype(np.float32)
 test_labels = np.asarray(test_labels).astype(np.int32)
-
-# the data, split between train and Digit-Recognizer sets
-# (x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-print(train_images.shape, train_labels.shape)
 
 train_images = train_images.reshape((train_images.shape[0], 28, 28, 1))
 test_images = test_images.reshape((test_images.shape[0], 28, 28, 1))
@@ -48,13 +36,9 @@ train_images /= 255
 test_images /= 255
 
 # Reshaping data-Adding number of channels as 1 (Grayscale images)
-train_images = train_images.reshape((train_images.shape[0],
-                                     train_images.shape[1],
-                                     train_images.shape[2], 1))
+train_images = train_images.reshape((train_images.shape[0], train_images.shape[1], train_images.shape[2], 1))
 
-test_images = test_images.reshape((test_images.shape[0],
-                                   test_images.shape[1],
-                                   test_images.shape[2], 1))
+test_images = test_images.reshape((test_images.shape[0], test_images.shape[1], test_images.shape[2], 1))
 
 # Scaling down pixel values
 train_images = train_images.astype('float32') / 255
@@ -96,15 +80,10 @@ model.add(Dense(num_classes, activation='softmax'))
 """
 model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
 
-val_images = train_images[:10000]
-partial_images = train_images[10000:]
-val_labels = train_labels[:10000]
-partial_labels = train_labels[10000:]
-
 earlyStopping = callbacks.EarlyStopping(monitor="val_loss", mode="auto", patience=5, restore_best_weights=True)
 
-hist = model.fit(partial_images, partial_labels, batch_size=None,
-                 epochs=25, validation_data=(val_images, val_labels),
+hist = model.fit(train_images, train_labels, batch_size=None,
+                 epochs=25, validation_data=(test_images, test_labels),
                  callbacks=[earlyStopping])
 print("The model has successfully trained")
 
