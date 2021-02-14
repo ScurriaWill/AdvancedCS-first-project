@@ -3,8 +3,10 @@ from tkinter import *
 import numpy as np
 from PIL import ImageGrab
 from keras.models import load_model
+import tensorflow as tf
 
 model = load_model('saved_mnist_model')
+size = 300
 
 
 def predict_digit(img):
@@ -28,7 +30,7 @@ class App(tk.Tk):
         self.x = self.y = 0
 
         # Creating elements
-        self.canvas = tk.Canvas(self, width=300, height=300, bg="white", cursor="cross")
+        self.canvas = tk.Canvas(self, width=size, height=size, bg="white", cursor="cross")
         self.label = tk.Label(self, text="Thinking..", font=("Helvetica", 48))
         self.classify_btn = tk.Button(self, text="Recognise", command=self.classify_handwriting)
         self.button_clear = tk.Button(self, text="Clear", command=self.clear_all)
@@ -46,7 +48,7 @@ class App(tk.Tk):
         self.canvas.delete("all")
 
     def classify_handwriting(self):
-        rect = (self.winfo_rootx() + 5, self.winfo_rooty(), self.winfo_rootx() + 295, self.winfo_rooty() + 300)
+        rect = (self.winfo_rootx() + 8, self.winfo_rooty() + 55, self.winfo_rootx() + (size*2) + 20, self.winfo_rooty() + (size*2) + 60)
         im = ImageGrab.grab(rect)
         digit, acc = predict_digit(im)
         self.label.configure(text=str(digit) + ', ' + str(int(acc * 100)) + '%')

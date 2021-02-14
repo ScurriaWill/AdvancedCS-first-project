@@ -1,5 +1,4 @@
 import ssl
-
 from keras import layers, callbacks
 from keras.datasets import mnist
 from keras.models import Sequential
@@ -42,9 +41,10 @@ model.add(layers.Flatten())
 model.add(layers.Dense(64, activation="relu"))
 model.add(layers.Dense(10, activation="softmax"))
 
+
 model.compile(optimizer="rmsprop", loss="categorical_crossentropy", metrics=['accuracy'])
 
-earlyStopping = callbacks.EarlyStopping(monitor="val_loss", mode="auto", patience=5, restore_best_weights=True)
+earlyStopping = callbacks.EarlyStopping(monitor="val_loss", mode="auto", patience=3, restore_best_weights=True)
 
 hist = model.fit(train_images, train_labels, batch_size=None,
                  epochs=epochs, validation_data=(test_images, test_labels), callbacks=[earlyStopping])
