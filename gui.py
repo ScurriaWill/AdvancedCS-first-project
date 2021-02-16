@@ -6,7 +6,7 @@ from PIL import ImageGrab
 from keras.models import load_model
 
 model = load_model('saved_mnist_model')
-size = 300
+size = 400
 
 
 def predict_digit(img):
@@ -31,19 +31,19 @@ class App(tk.Tk):
 
         # Creating elements
         self.canvas = tk.Canvas(self, width=size, height=size, bg="white", cursor="cross")
-        self.label = tk.Label(self, text="Thinking..", font=("Helvetica", 48))
+        # self.label = tk.Label(self, text="Thinking..", font=("Helvetica", 48))
         self.classify_btn = tk.Button(self, text="Recognise", command=self.classify_handwriting)
         self.button_clear = tk.Button(self, text="Clear", command=self.clear_all)
 
         # Grid structure
         self.canvas.grid(row=0, column=0, pady=2, sticky=W, )
-        self.label.grid(row=0, column=1, pady=2, padx=2)
+        # self.label.grid(row=0, column=1, pady=2, padx=2)
         self.classify_btn.grid(row=1, column=1, pady=2, padx=2)
         self.button_clear.grid(row=1, column=0, pady=2)
 
         # self.canvas.bind("<Motion>", self.start_pos)
         self.canvas.bind("<B1-Motion>", self.draw_lines)
-        # self.canvas.pack(expand=YES, fill=BOTH)
+        # self.pack(expand=YES, fill=BOTH)
 
     def clear_all(self):
         self.canvas.delete("all")
@@ -83,12 +83,11 @@ class App(tk.Tk):
             cv2.putText(image, data, (x, y - 5), font, font_scale, color, thickness)
 
         cv2.imshow('Output', image)
-        cv2.imwrite(filename, image)
+        # cv2.imwrite(filename, image)
         '''pic = PhotoImage(master=self.canvas, file=filename)
         self.canvas.one = PhotoImage(master=self.canvas, file=filename)
         self.canvas.create_image(rect[0], rect[1], pic, anchor=NW)'''
 
-        cv2.imshow('image', image)
         cv2.waitKey(0)
 
 
