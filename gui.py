@@ -31,27 +31,25 @@ class App(tk.Tk):
 
         # Creating elements
         self.canvas = tk.Canvas(self, width=size, height=size, bg="white", cursor="cross")
-        # self.label = tk.Label(self, text="Thinking..", font=("Helvetica", 48))
         self.classify_btn = tk.Button(self, text="Recognise", command=self.classify_handwriting)
         self.button_clear = tk.Button(self, text="Clear", command=self.clear_all)
 
         # Grid structure
-        self.canvas.grid(row=0, column=0, pady=2, sticky=W, )
-        # self.label.grid(row=0, column=1, pady=2, padx=2)
+        self.canvas.grid(row=0, column=0, pady=2, sticky=W)
         self.classify_btn.grid(row=1, column=1, pady=2, padx=2)
         self.button_clear.grid(row=1, column=0, pady=2)
 
         # self.canvas.bind("<Motion>", self.start_pos)
         self.canvas.bind("<B1-Motion>", self.draw_lines)
-        # self.pack(expand=YES, fill=BOTH)
 
     def clear_all(self):
         self.canvas.delete("all")
 
     def classify_handwriting(self):
         filename = "image_1.pgm"
-        rect = (self.winfo_rootx() + 8, self.winfo_rooty() + 55, self.winfo_rootx() + (size*2) + 20, self.winfo_rooty() + (size*2) + 60)
-        im = ImageGrab.grab(rect).save(filename)
+        rect = (self.winfo_rootx() + 8, self.winfo_rooty() + 55, self.winfo_rootx() + (size * 2) + 20,
+                self.winfo_rooty() + (size * 2) + 60)
+        ImageGrab.grab(rect).save(filename)
 
         image = cv2.imread(filename, cv2.IMREAD_COLOR)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -83,16 +81,8 @@ class App(tk.Tk):
             cv2.putText(image, data, (x, y - 5), font, font_scale, color, thickness)
 
         cv2.imshow('Output', image)
-        # cv2.imwrite(filename, image)
-        '''pic = PhotoImage(master=self.canvas, file=filename)
-        self.canvas.one = PhotoImage(master=self.canvas, file=filename)
-        self.canvas.create_image(rect[0], rect[1], pic, anchor=NW)'''
 
         cv2.waitKey(0)
-
-
-        # digit, acc = predict_digit(im)
-        # self.label.configure(text=str(digit) + ', ' + str(int(acc * 100)) + '%')
 
     def draw_lines(self, event):
         self.x = event.x
